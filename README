@@ -2,10 +2,10 @@ Project 1: My little malloc
 ****************************************
 Authors: Maksym LaRouche msl226
 
-1. Design Decisions & Implementation
+1. Design & Implementation
 ****************************************
 Heap Structure:
-We use a static 4096-byte array unioned with a `double` to guarantee strict 8-byte alignment across the heap.
+I use a static 4096-byte array unioned with a `double` to guarantee strict 8-byte alignment across the heap.
 
 Metadata (ChunkHeader):
 Every payload is preceded by a header tracking the chunk's size (`size_t` to avoid negative offsets and ensure correct alignment) and allocation status (`int is_allocated`).
@@ -25,13 +25,13 @@ Leak Detection:
 An `atexit` handler triggers `leakDetector()` when the client program terminates. It sweeps the heap and reports the number of unfreed objects and total leaked payload bytes to stderr.
 
 2. Testing Plan (memgrind.c)
-========================================
-We developed 5 distinct workloads to stress-test the allocator's performance, alignment, and fragmentation handling:
+********************************************
+I developed 5 workloads to stress-test the allocator's performance, alignment, and fragmentation handling:
 
-- Task 1 (Array Bounds): Allocates exponentially increasing chunk sizes (8 to 1024) and frees them in reverse order.
-- Task 2 (Small Objects): Allocates 120 1-byte payloads (rounded to 8 bytes) and frees them sequentially.
-- Task 3 (Randomized Stress Test): Randomly alternates between allocating and freeing 1-byte objects until 120 allocations are reached, simulating unpredictable memory usage.
-- Task 4 (Alternating Frees): Allocates 50 16-byte objects, frees the even-indexed pointers, and then frees the odd-indexed pointers. This explicitly tests the coalescing logic by isolating free chunks and then merging them later.
-- Task 5 (Heap Exhaustion): Continues allocating 16-byte payloads until `mymalloc` correctly returns NULL, testing the allocator's out-of-memory handling. It then frees the entire heap.
+-Task 1 (Array Bounds): Allocates exponentially increasing chunk sizes (8 to 1024) and frees them in reverse order.
+-Task 2 (Small Objects): Allocates 120 1-byte payloads (rounded to 8 bytes) and frees them sequentially.
+-Task 3 (Randomized Stress Test): Randomly alternates between allocating and freeing 1-byte objects until 120 allocations are reached, simulating unpredictable memory usage.
+-Task 4 (Alternating Frees): Allocates 50 16-byte objects, frees the even-indexed pointers, and then frees the odd-indexed pointers. This explicitly tests the coalescing logic by isolating free chunks and then merging them later.
+-Task 5 (Heap Exhaustion): Continues allocating 16-byte payloads until `mymalloc` correctly returns NULL, testing the allocator's out-of-memory handling. It then frees the entire heap.
 
 Performance is tracked using `gettimeofday()`, running each task 50 times to calculate an average execution time in microseconds.
