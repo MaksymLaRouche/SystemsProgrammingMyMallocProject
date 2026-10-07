@@ -1,7 +1,3 @@
-//
-// Created by maksym on 9/19/26.
-//
-
 #ifndef _MYMMALLOC_H
 #define _MYMMALLOC_H
 

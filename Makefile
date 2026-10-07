@@ -10,7 +10,7 @@ memgrind.o: memgrind.c mymalloc.h
 	$(CC) $(CFLAGS) -c memgrind.c
 
 mymalloc.o: mymalloc.c mymalloc.h
-	$(CC) $(CFLAGS) c mymalloc.c
+	$(CC) $(CFLAGS) -c mymalloc.c
 
 clean:
 	rm -f *.o memgrind

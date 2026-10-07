@@ -44,6 +44,7 @@ static void init_heap(void) {
     firstChunk->size = MEMLENGTH;
     firstChunk->is_allocated = 0; //start free
 
+    initialized = 1;
     atexit(leakDetector);
 }
 
@@ -84,7 +85,7 @@ void * mymalloc(size_t size, char *file, int line) {
             //space found
 
             if (curr->size >= totalNeeded + sizeof(ChunkHeader) + 8) {
-                ChunkHeader *next = (ChunkHeader *)(char *)curr + totalNeeded;
+                ChunkHeader *next = (ChunkHeader *)((char *)curr + totalNeeded);
                 next->size = curr->size - totalNeeded;
                 next->is_allocated = 0;
 
