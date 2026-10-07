@@ -1,11 +1,9 @@
 Project 1: My little malloc
-========================================
-Authors:
-- [Your First and Last Name] ([Your NetID])
-- [Partner's First and Last Name] ([Partner's NetID]) - (Remove if working alone)
+****************************************
+Authors: Maksym LaRouche msl226
 
 1. Design Decisions & Implementation
-========================================
+****************************************
 Heap Structure:
 We use a static 4096-byte array unioned with a `double` to guarantee strict 8-byte alignment across the heap.
 
