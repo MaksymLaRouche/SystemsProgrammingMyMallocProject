@@ -12,14 +12,14 @@ Every payload is preceded by a header tracking the chunk's size (`size_t` to avo
 
 Allocation (mymalloc):
 - Payload rounding: Requests are rounded up to the nearest multiple of 8 bytes to maintain alignment.
-- Strategy: We use a First-Fit algorithm, traversing the heap linearly from the start until a sufficiently large free chunk is found.
+- Strategy: I use a First-Fit algorithm, traversing the heap linearly from the start until a sufficiently large free chunk is found.
 - Splitting: If the found chunk is larger than the requested size plus the size of a header and minimum payload (16 bytes minimum), the chunk is split. The leftover space becomes a new adjacent free chunk to minimize internal fragmentation.
 
 Deallocation & Error Checking (myfree):
 The `free` function validates pointers before operating. It ensures the pointer falls within heap bounds and exactly matches the start of a valid payload. If the pointer is invalid or already freed (double free), it prints a formatted error to stderr and calls `exit(2)`.
 
 Coalescing:
-To prevent external fragmentation, we implemented a global sweep coalescing strategy. Whenever a chunk is freed, the coalesce function traverses the entire heap, merging any adjacent free chunks into larger continuous blocks.
+To prevent external fragmentation, I implemented a global sweep coalescing strategy. Whenever a chunk is freed, the coalesce function traverses the entire heap, merging any adjacent free chunks into larger continuous blocks.
 
 Leak Detection:
 An `atexit` handler triggers `leakDetector()` when the client program terminates. It sweeps the heap and reports the number of unfreed objects and total leaked payload bytes to stderr.
